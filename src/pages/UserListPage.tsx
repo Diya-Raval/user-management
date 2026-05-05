@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useDebounce } from 'use-debounce';
 import { useNavigate } from 'react-router-dom'
 import { CommonTable } from '../components/common/CommonTable'
 import { DeleteConfirmModal } from '../components/users/DeleteConfirmModal'
@@ -40,21 +41,25 @@ export function UserListPage() {
   const [editingUser, setEditingUser] = useState<User | null>(null)
   const [loadingUser, setLoadingUser] = useState(false)
 
+  const [debouncedSearch] = useDebounce(search, 500)
+
+const [filtersApplied, setFiltersApplied] = useState(false)
+
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null)
 
-  const hasActiveFilters = role !== 'all' || gender !== 'all' || sortBy !== 'name-asc'
+  const hasActiveFilters = role !== 'all' || gender !== 'all' || filtersApplied
 
   const fetchUsers = useCallback(async () => {
     setLoading(true)
     try {
       const { sortBy: sortField, order } = parseSortBy(sortBy)
-      const result = await getUsers({ page, limit: rowsPerPage, search, role, gender, sortBy: sortField, order })
+      const result = await getUsers({ page, limit: rowsPerPage, search:debouncedSearch, role, gender, sortBy: sortField, order, filtersApplied })
       setUsers(result.users)
       setTotal(result.total)
     } finally {
       setLoading(false)
     }
-  }, [page, rowsPerPage, search, role, gender, sortBy])
+  }, [page, rowsPerPage, debouncedSearch, role, gender, sortBy, filtersApplied])
 
   useEffect(() => {
     fetchUsers()
@@ -69,6 +74,7 @@ export function UserListPage() {
     setRole(pendingRole)
     setGender(pendingGender)
     setSortBy(pendingSortBy)
+    setFiltersApplied(true)
     setPage(1)
   }
 
@@ -79,6 +85,7 @@ export function UserListPage() {
     setRole('all')
     setGender('all')
     setSortBy('name-asc')
+    setFiltersApplied(false)
     setPage(1)
   }
 

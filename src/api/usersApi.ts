@@ -87,22 +87,104 @@ function toSkip(page: number, limit: number) {
   return (page - 1) * limit
 }
 
+// Fetch ALL pages for a given filter so we can cross-filter client-side
+async function fetchAllByFilter(
+  key: 'gender' | 'role',
+  value: string,
+  baseParams: Record<string, string | number>,
+): Promise<RawUser[]> {
+  // First request to know the total
+  const first = await httpClient.get<UsersApiResponse>('/users/filter', {
+    params: { ...baseParams, limit: 0, skip: 0, key, value },
+  })
+  const total = Number(first.data.total || 0)
+  if (total === 0) return []
+
+  const response = await httpClient.get<UsersApiResponse>('/users/filter', {
+    params: { ...baseParams, limit: total, skip: 0, key, value },
+  })
+  return response.data.users || []
+}
+
 export async function getUsers(query: UsersQuery): Promise<UsersResponse> {
   const skip = toSkip(query.page, query.limit)
   const search = query.search.trim()
-
-  const endpoint = search ? '/users/search' : '/users'
-  const params: Record<string, string | number> = {
+  const hasGender = query.gender !== 'all'
+  const hasRole = query.role !== 'all'
+  const isDefaultSort = query.sortBy === 'name' && query.order === 'asc'
+  const isCleanState = isDefaultSort && !hasGender && !hasRole && !search && !query.filtersApplied
+  
+  const baseParams: Record<string, string | number> = {
     limit: query.limit,
     skip,
-    sortBy: query.sortBy === 'name' ? 'firstName' : 'age',
-    order: query.order,
+    ...(!isCleanState && {
+      sortBy: query.sortBy === 'name' ? 'firstName' : 'age',
+      order: query.order,
+    }),
   }
-  if (search) params.q = search
-  if (query.role !== 'all') params.role = query.role
-  if (query.gender !== 'all') params.gender = query.gender
 
-  const response = await httpClient.get<UsersApiResponse>(endpoint, { params })
+  // Search only (no filter)
+  if (search && !hasGender && !hasRole) {
+    const response = await httpClient.get<UsersApiResponse>('/users/search', {
+      params: { ...baseParams, q: search },
+    })
+    return toUsersResponse(response.data)
+  }
+
+  // Gender only
+  if (hasGender && !hasRole && !search) {
+    const response = await httpClient.get<UsersApiResponse>('/users/filter', {
+      params: { ...baseParams, key: 'gender', value: query.gender },
+    })
+    return toUsersResponse(response.data)
+  }
+
+  // Role only
+  if (hasRole && !hasGender && !search) {
+    const response = await httpClient.get<UsersApiResponse>('/users/filter', {
+      params: { ...baseParams, key: 'role', value: query.role },
+    })
+    return toUsersResponse(response.data)
+  }
+
+  // Combined filters — fetch primary filter in full, apply rest client-side
+  if (hasGender || hasRole || search) {
+    let allUsers: RawUser[]
+
+    if (hasGender) {
+      allUsers = await fetchAllByFilter('gender', query.gender, baseParams)
+    } else if (hasRole) {
+      allUsers = await fetchAllByFilter('role', query.role, baseParams)
+    } else {
+      allUsers = []
+    }
+
+    if (hasGender && hasRole) {
+      allUsers = allUsers.filter((u) => getRoleFromResponse(u.role) === query.role)
+    }
+
+    if (search) {
+      const q = search.toLowerCase()
+      allUsers = allUsers.filter(
+        (u) =>
+          `${u.firstName} ${u.lastName}`.toLowerCase().includes(q) ||
+          (u.email || '').toLowerCase().includes(q),
+      )
+    }
+
+    const total = allUsers.length
+    const pageUsers = allUsers.slice(skip, skip + query.limit)
+
+    return {
+      users: pageUsers.map(mapUser),
+      total,
+      skip,
+      limit: query.limit,
+    }
+  }
+
+  // No filters
+  const response = await httpClient.get<UsersApiResponse>('/users', { params: baseParams })
   return toUsersResponse(response.data)
 }
 
@@ -156,6 +238,5 @@ export async function getFilterOptions(
   return (response.data || []).map((value) => ({
     label: `${value.charAt(0).toUpperCase()}${value.slice(1)}`,
     value,
-  })
-  )
+  }))
 }
