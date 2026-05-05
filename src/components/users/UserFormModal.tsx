@@ -8,6 +8,7 @@ import { Modal } from '../common/Modal'
 import { SelectField } from '../common/SelectField'
 import { ImageModal } from '../common/ImageModal'
 import { Eye } from '@phosphor-icons/react'
+import { Loader } from '../common/Loader'
 
 interface UserFormModalProps {
   open: boolean
@@ -146,13 +147,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
     <>
       <Modal open={open} title={isEdit ? 'Edit User' : 'Add User'} onClose={handleClose}>
         {loadingUser ? (
-          <div className="flex items-center justify-center py-16">
-            <svg className="h-6 w-6 animate-spin text-blue-500" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-            </svg>
-            <span className="ml-2 text-sm text-slate-500">Loading user details...</span>
-          </div>
+          <Loader />
         ) : (
           <form className="grid grid-cols-1 gap-3 md:grid-cols-2" onSubmit={formik.handleSubmit}>
             <InputField
