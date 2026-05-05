@@ -24,12 +24,13 @@ export function TableFilterModal({
       <section className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900">
         <header className="mb-4 flex items-center justify-between">
           <h3 className="text-base font-semibold">Filters</h3>
-          <button
+          <Button
             onClick={onClose}
+            variant="secondary"
             className="rounded-md p-1 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             <X size={18} />
-          </button>
+          </Button>
         </header>
         <div className="space-y-3">{content}</div>
         <div className="mt-4 flex justify-end gap-2">

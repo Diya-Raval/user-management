@@ -52,6 +52,7 @@ export interface UsersQuery {
   gender: string
   sortBy: 'name' | 'age'
   order: 'asc' | 'desc'
+  filtersApplied?: boolean
 }
 
 export interface UserFormValues {

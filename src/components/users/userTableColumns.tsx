@@ -1,5 +1,6 @@
 import { Button } from '../common/Button'
 import type { User } from '../../types/user'
+import { Eye, Pencil, Trash } from '@phosphor-icons/react'
 
 interface CreateUserColumnsArgs {
   onView: (user: User) => void
@@ -31,13 +32,13 @@ export function createUserColumns({ onView, onEdit, onDelete }: CreateUserColumn
       render: (user: User) => (
         <div className="flex gap-2">
           <Button variant="secondary" onClick={() => onView(user)}>
-            View
+            <Eye size={20} />
           </Button>
           <Button variant="secondary" onClick={() => onEdit(user)}>
-            Edit
+            <Pencil size={20} />
           </Button>
           <Button variant="danger" onClick={() => onDelete(user)}>
-            Delete
+            <Trash size={20} />
           </Button>
         </div>
       ),

@@ -2,6 +2,7 @@ import { FunnelSimple, MagnifyingGlass, X } from '@phosphor-icons/react'
 import { useMemo, useState, type ReactNode } from 'react'
 import { TableFilterModal } from './TableFilterModal'
 import { TablePaginationBar } from './TablePaginationBar'
+import { Button } from './Button'
 
 interface Column<T> {
   key: string
@@ -88,20 +89,20 @@ export function CommonTable<T>({
             />
             {/* NEW: clear button */}
             {searchValue ? (
-              <button
-                type="button"
+              <Button
+                variant="secondary"
                 onClick={() => onSearch('')}
                 className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
                 aria-label="Clear search"
               >
                 <X size={16} />
-              </button>
+              </Button>
             ) : null}
           </label>
         ) : null}
         {showFilterButton ? (
-          <button
-            type="button"
+          <Button
+            variant="secondary"
             onClick={() => {
               onFilterOpen?.()
               setFilterOpen(true)
@@ -109,12 +110,12 @@ export function CommonTable<T>({
             className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-600 cursor-pointer dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
             aria-label="Open filters"
           >
-            <FunnelSimple size={20} weight="duotone" />
+            <FunnelSimple size={20}  />
             {/* NEW: active filter dot */}
             {hasActiveFilters ? (
               <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-blue-500" />
             ) : null}
-          </button>
+          </Button>
         ) : null}
       </div>
 
