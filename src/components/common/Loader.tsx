@@ -1,4 +1,4 @@
-export function Loader({ text = 'Loading...' }: { text?: string }) {
+export function Loader() {
   return (
     <div className="grid min-h-[55vh] place-items-center text-center" aria-live="polite">
       <div className="space-y-3">

@@ -27,7 +27,7 @@ export function UserDetailsPage() {
     run()
   }, [id])
 
-  if (loading) return <Loader text="Loading user details..." />
+  if (loading) return <Loader />
   if (error || !user) return <ErrorState message={error || 'User not found'} />
 
   return (
