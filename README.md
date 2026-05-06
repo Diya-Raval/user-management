@@ -1,73 +1,91 @@
-# React + TypeScript + Vite
+# User Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, responsive User Management Dashboard built with React, TypeScript, and Vite. This application interfaces with the DummyJSON API to provide comprehensive user management features including viewing, creating, editing, and deleting users.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Core Capabilities**
+- **User Listing**: View users in a paginated, responsive data table with skeleton loading states.
+- **Advanced Search & Filtering**: 
+  - Search by name or email.
+  - Filter users by Role and Gender.
+  - Sort by Name (A-Z/Z-A) and Age (Low-High/High-Low).
+- **CRUD Operations**: 
+  - Add new users via a comprehensive modal form.
+  - Edit existing user profiles with pre-filled data.
+  - Delete users with a confirmation safeguard.
+- **Detailed User Profiles**: Navigate to dedicated user detail pages displaying Basic Info, Address, Company Details, and Additional Information.
+- **Form Validation**: robust client-side validation using Formik and Yup for all create/edit fields.
 
-## React Compiler
+**UI / UX Enhancements**
+- **Dark Mode**: Fully supported dark/light theme toggle.
+- **Toast Notifications**: Context-aware success and error alerts for user interactions.
+- **Sticky Header**: Seamless navigation and theme toggling accessible from anywhere on the page.
+- **Responsive Design**: Carefully crafted layout using Tailwind CSS ensuring a seamless experience on both mobile and desktop devices.
+- **Custom Components**: Manually built UI components.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Prerequisites
 
-## Expanding the ESLint configuration
+Before you begin, ensure you have the following installed on your machine:
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- [npm](https://www.npmjs.com/) (usually comes with Node.js)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Setup Instructions
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. **Clone or Download the Repository:**
+   git clone <repository-url>
+   Navigate to development branch
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. **Install Dependencies:**
+   Run the following command to install all required packages:
+   ```bash
+   npm install
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Run Instructions
+
+1. **Start the Development Server:**
+   ```bash
+   npm run dev
+   ```
+   This will start the Vite dev server, typically accessible at `http://localhost:5173`.
+
+2. **Build for Production:**
+   To create an optimized production build:
+   ```bash
+   npm run build
+   ```
+   The built assets will be located in the `dist` directory.
+
+3. **Preview the Production Build:**
+   After building, you can locally preview the production version:
+   ```bash
+   npm run preview
+   ```
+
+## Project Structure
+
+```text
+src/
+├── api/             # API integration using Axios (DummyJSON)
+├── assets/          # Static assets
+├── components/      # Reusable UI components
+│   ├── common/      # Generic components (Buttons, Inputs, Modals, Tables, Toast)
+│   ├── layout/      # App layout components (Header)
+│   └── users/       # User-feature specific components (Forms, Filters)
+├── pages/           # Application pages (List, Details)
+├── types/           # TypeScript interfaces and types
+├── utils/           # Utility functions (Toast subscribers)
+├── App.tsx          # Main application component & Routing setup
+└── main.tsx         # React entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Technologies Used
+- React 19
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router DOM
+- Axios
+- Formik & Yup
+- Phosphor Icons

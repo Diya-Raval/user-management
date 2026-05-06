@@ -3,6 +3,7 @@ import { useMemo, useState, type ReactNode } from 'react'
 import { TableFilterModal } from './TableFilterModal'
 import { TablePaginationBar } from './TablePaginationBar'
 import { Button } from './Button'
+import { Loader } from './Loader'
 
 interface Column<T> {
   key: string
@@ -33,6 +34,7 @@ interface CommonTableProps<T> {
   onRowsPerPageChange: (size: number) => void
   getRowId: ({ data }: { data: T }) => string
   hasActiveFilters?: boolean
+  rowPerPageOptions?: number[];
 }
 
 function getVisiblePages(currentPage: number, totalPages: number): Array<number | 'dots'> {
@@ -67,6 +69,7 @@ export function CommonTable<T>({
   onRowsPerPageChange,
   getRowId,
   hasActiveFilters,
+  rowPerPageOptions,
 }: CommonTableProps<T>) {
   const [filterOpen, setFilterOpen] = useState(false)
   const totalPages = Math.max(1, Math.ceil(totalRows / rowsPerPage))
@@ -110,7 +113,7 @@ export function CommonTable<T>({
             className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl border border-slate-300 bg-white text-slate-600 cursor-pointer dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
             aria-label="Open filters"
           >
-            <FunnelSimple size={20}  />
+            <FunnelSimple size={20} />
             {/* NEW: active filter dot */}
             {hasActiveFilters ? (
               <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-blue-500" />
@@ -133,14 +136,20 @@ export function CommonTable<T>({
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={columns.length} className="px-3 py-8 text-center text-sm text-slate-500">
-                  <div className="flex items-center justify-center gap-2">
-                    <svg className="h-4 w-4 animate-spin text-blue-500" viewBox="0 0 24 24" fill="none">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-                    </svg>
-                    Loading...
-                  </div>
+                <td
+                  colSpan={columns.length}
+                  className="px-3 py-8 text-center text-sm text-slate-500"
+                >
+                  <Loader />
+                </td>
+              </tr>
+            ) : rowData.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  className="px-3 py-8 text-center text-sm text-slate-500"
+                >
+                  No users found
                 </td>
               </tr>
             ) : (
@@ -148,12 +157,16 @@ export function CommonTable<T>({
                 <tr
                   key={getRowId({ data: row })}
                   onClick={() => onRowClick?.(row)}
-                  className={`border-t border-slate-200 dark:border-slate-700 ${
-                    onRowClick ? 'cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60' : ''
-                  }`}
+                  className={`border-t border-slate-200 dark:border-slate-700 ${onRowClick
+                    ? 'cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/60'
+                    : ''
+                    }`}
                 >
                   {columns.map((column) => (
-                    <td key={`${column.key}-${getRowId({ data: row })}`} className="px-3 py-2 text-sm">
+                    <td
+                      key={`${column.key}-${getRowId({ data: row })}`}
+                      className="px-3 py-2 text-sm"
+                    >
                       {column.render(row)}
                     </td>
                   ))}
@@ -173,13 +186,17 @@ export function CommonTable<T>({
         onPageChange={onPageChange}
         pages={pages}
         totalPages={totalPages}
+        rowPerPageOptions={rowPerPageOptions}
       />
 
       <TableFilterModal
         open={Boolean(filterOpen && showFilterButton)}
         content={filterContent}
         onClose={() => setFilterOpen(false)}
-        onReset={onFilterReset}
+        onReset={() => {
+          onFilterReset();
+          setFilterOpen(false)
+        }}
         onApply={() => {
           onFilterApply?.()
           setFilterOpen(false)

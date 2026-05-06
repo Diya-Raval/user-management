@@ -7,6 +7,7 @@ interface TablePaginationBarProps {
   onPageChange: (page: number) => void
   pages: Array<number | 'dots'>
   totalPages: number
+  rowPerPageOptions?: number[];
 }
 
 export function TablePaginationBar({
@@ -18,6 +19,7 @@ export function TablePaginationBar({
   onPageChange,
   pages,
   totalPages,
+  rowPerPageOptions,
 }: TablePaginationBarProps) {
   const start = totalRows === 0 ? 0 : (currentPage - 1) * rowsPerPage + 1
   const end = Math.min(currentPage * rowsPerPage, totalRows)
@@ -28,9 +30,9 @@ export function TablePaginationBar({
         <select
           value={rowsPerPage}
           onChange={(event) => onRowsPerPageChange(Number(event.target.value))}
-          className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-900"
+          className="rounded-md border border-slate-300 bg-white px-2 py-1 text-sm dark:border-slate-700 dark:bg-slate-900 cursor-pointer"
         >
-          {[10, 20, 50].map((size) => (
+          {rowPerPageOptions?.map((size) => (
             <option key={size} value={size}>
               {size}
             </option>
@@ -44,7 +46,7 @@ export function TablePaginationBar({
           <button
             disabled={currentPage <= 1}
             onClick={() => onPageChange(currentPage - 1)}
-            className="rounded-md border border-slate-300 px-2 py-1 text-sm disabled:opacity-40 dark:border-slate-700"
+            className="rounded-md border border-slate-300 px-2 py-1 text-sm disabled:opacity-40 dark:border-slate-700 cursor-pointer"
           >
             Previous
           </button>
@@ -56,11 +58,10 @@ export function TablePaginationBar({
             ) : (
               <button
                 key={page}
-                className={`min-w-8 rounded-md border px-2 py-1 text-sm ${
-                  page === currentPage
+                className={`min-w-8 rounded-md border px-2 py-1 text-sm cursor-pointer ${page === currentPage
                     ? 'border-blue-600 bg-blue-600 text-white'
                     : 'border-slate-300 dark:border-slate-700'
-                }`}
+                  }`}
                 onClick={() => onPageChange(page)}
               >
                 {page}
@@ -70,7 +71,7 @@ export function TablePaginationBar({
           <button
             disabled={currentPage >= totalPages}
             onClick={() => onPageChange(currentPage + 1)}
-            className="rounded-md border border-slate-300 px-2 py-1 text-sm disabled:opacity-40 dark:border-slate-700"
+            className="rounded-md border border-slate-300 px-2 py-1 text-sm disabled:opacity-40 dark:border-slate-700 cursor-pointer"
           >
             Next
           </button>

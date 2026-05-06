@@ -7,6 +7,7 @@ interface DeleteConfirmModalProps {
   user: User | null
   onClose: () => void
   onConfirm: () => Promise<void>
+  loading?: boolean
 }
 
 export function DeleteConfirmModal({
@@ -14,6 +15,7 @@ export function DeleteConfirmModal({
   user,
   onClose,
   onConfirm,
+  loading,
 }: DeleteConfirmModalProps) {
   return (
     <Modal open={open} title="Confirm Delete" onClose={onClose}>
@@ -22,17 +24,15 @@ export function DeleteConfirmModal({
         <strong>{user ? `${user.firstName} ${user.lastName}` : 'this user'}</strong>?
       </p>
       <div className="mt-4 flex justify-end gap-2">
-        <Button variant="secondary" onClick={onClose}>
-          Cancel
-        </Button>
         <Button
           variant="danger"
           onClick={async () => {
             await onConfirm()
             onClose()
           }}
+          disabled={loading}
         >
-          Delete
+          {loading ? 'Deleting...' : 'Delete'}
         </Button>
       </div>
     </Modal>
