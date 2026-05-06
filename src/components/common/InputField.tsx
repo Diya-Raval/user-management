@@ -4,13 +4,15 @@ interface InputFieldProps extends InputHTMLAttributes<HTMLInputElement> {
   id: string
   label: string
   error?: string
+  required?: boolean
 }
 
-export function InputField({ id, label, error, className, ...rest }: InputFieldProps) {
+export function InputField({ id, label, error, required, className, ...rest }: InputFieldProps) {
   return (
     <div className="flex flex-col gap-1">
       <label htmlFor={id} className="text-sm font-medium text-slate-700 dark:text-slate-300">
         {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       <input
         id={id}

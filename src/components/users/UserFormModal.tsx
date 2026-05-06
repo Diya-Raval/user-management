@@ -165,56 +165,63 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
         ) : (
           <form className="grid grid-cols-1 gap-3 md:grid-cols-2" onSubmit={formik.handleSubmit}>
             <InputField
-              id="firstName" label="First Name *"
+              id="firstName" label="First Name"
               value={formik.values.firstName}
               error={formik.touched.firstName ? formik.errors.firstName : undefined}
               onChange={formik.handleChange('firstName')}
               onBlur={formik.handleBlur('firstName')}
               placeholder='Enter First name'
+              required
             />
             <InputField
-              id="lastName" label="Last Name *"
+              id="lastName" label="Last Name"
               value={formik.values.lastName}
               error={formik.touched.lastName ? formik.errors.lastName : undefined}
               onChange={formik.handleChange('lastName')}
               onBlur={formik.handleBlur('lastName')}
               placeholder='Enter Last name'
+              required
             />
             <InputField
-              id="email" label="Email *"
+              id="email" label="Email"
               value={formik.values.email}
               error={formik.touched.email ? formik.errors.email : undefined}
               onChange={formik.handleChange('email')}
               onBlur={formik.handleBlur('email')}
               placeholder='Enter Email'
+              required
             />
             <InputField
-              id="phone" label="Phone *"
+              id="phone" label="Phone"
               value={formik.values.phone}
               error={formik.touched.phone ? formik.errors.phone : undefined}
               onChange={formik.handleChange('phone')}
               onBlur={formik.handleBlur('phone')}
               placeholder='Enter Phone'
+              required
             />
             <InputField
-              id="age" label="Age *" type="number"
+              id="age" label="Age" type="number"
               value={String(formik.values.age)}
               error={formik.touched.age ? formik.errors.age : undefined}
               onChange={formik.handleChange('age')}
               onBlur={formik.handleBlur('age')}
               placeholder='Enter Age'
+              required
             />
             <SelectField
               id="gender" label="Gender"
               value={formik.values.gender}
               onChange={formik.handleChange('gender')}
               options={[{ label: 'Male', value: 'male' }, { label: 'Female', value: 'female' }]}
+              required
             />
             <SelectField
               id="role" label="Role"
               value={formik.values.role}
               onChange={formik.handleChange('role')}
               options={[{ label: 'Admin', value: 'admin' }, { label: 'Moderator', value: 'moderator' }, { label: 'User', value: 'user' }]}
+              required
             />
 
             {/* Profile Image Upload */}
@@ -240,8 +247,9 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
                       </button>
                     </>
                   ) : (
-                    <div className="h-20 w-20 rounded-full bg-slate-200 flex items-center justify-center text-xs text-black">
-                      No img
+                    <div className="h-20 w-20 rounded-full bg-slate-200 flex items-center justify-center text-xs text-black
+                    dark:text-white dark:bg-slate-900/60 dark:border dark:border-slate-600">
+                      No Image
                     </div>
                   )}
                 </div>
@@ -255,60 +263,67 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
             </div>
 
             <InputField
-              id="addressLine" label="Address Line *"
+              id="addressLine" label="Address Line"
               value={formik.values.addressLine}
               error={formik.touched.addressLine ? formik.errors.addressLine : undefined}
               onChange={formik.handleChange('addressLine')}
               onBlur={formik.handleBlur('addressLine')}
               placeholder='Enter Address'
+              required
             />
             <InputField
-              id="city" label="City *"
+              id="city" label="City"
               value={formik.values.city}
               error={formik.touched.city ? formik.errors.city : undefined}
               onChange={formik.handleChange('city')}
               onBlur={formik.handleBlur('city')}
               placeholder='Enter City'
+              required
             />
             <InputField
-              id="state" label="State *"
+              id="state" label="State"
               value={formik.values.state}
               error={formik.touched.state ? formik.errors.state : undefined}
               onChange={formik.handleChange('state')}
               onBlur={formik.handleBlur('state')}
               placeholder='Enter State'
+              required
             />
             <InputField
-              id="country" label="Country *"
+              id="country" label="Country"
               value={formik.values.country}
               error={formik.touched.country ? formik.errors.country : undefined}
               onChange={formik.handleChange('country')}
               onBlur={formik.handleBlur('country')}
               placeholder='Enter Country'
+              required
             />
             <InputField
-              id="companyName" label="Company Name *"
+              id="companyName" label="Company Name"
               value={formik.values.companyName}
               error={formik.touched.companyName ? formik.errors.companyName : undefined}
               onChange={formik.handleChange('companyName')}
               onBlur={formik.handleBlur('companyName')}
               placeholder='Enter Company name'
+              required
             />
             <InputField
-              id="department" label="Department *"
+              id="department" label="Department"
               value={formik.values.department}
               error={formik.touched.department ? formik.errors.department : undefined}
               onChange={formik.handleChange('department')}
               onBlur={formik.handleBlur('department')}
               placeholder='Enter Department'
+              required
             />
             <InputField
-              id="title" label="Title *"
+              id="title" label="Title"
               value={formik.values.title}
               error={formik.touched.title ? formik.errors.title : undefined}
               onChange={formik.handleChange('title')}
               onBlur={formik.handleBlur('title')}
               placeholder='Enter Title'
+              required
             />
 
             <div className="col-span-full mt-2 flex justify-end gap-2">
