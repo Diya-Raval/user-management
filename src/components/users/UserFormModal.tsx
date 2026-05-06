@@ -64,21 +64,21 @@ const validationSchema = Yup.object({
   lastName: Yup.string().trim().required('Last name is required'),
   email: Yup.string().trim().email('Invalid email address').required('Email is required'),
   phone: Yup.string()
-  .trim()
-  .matches(
-    /^\+?[0-9\s-]+$/,
-    'Phone number can contain digits, spaces, dashes and +'
-  )
-  .test(
-    'len',
-    'Phone number must have at least 10 digits',
-    (value) => {
-      if (!value) return false
-      const digitsOnly = value.replace(/\D/g, '')
-      return digitsOnly.length >= 10
-    }
-  )
-  .required('Phone is required'),
+    .trim()
+    .matches(
+      /^\+?[0-9\s-]+$/,
+      'Phone number can contain digits, spaces, dashes and +'
+    )
+    .test(
+      'len',
+      'Phone number must have at least 10 digits',
+      (value) => {
+        if (!value) return false
+        const digitsOnly = value.replace(/\D/g, '')
+        return digitsOnly.length >= 10
+      }
+    )
+    .required('Phone is required'),
   age: Yup.number().typeError('Age must be a number').min(1, 'Age must be positive').required('Age is required'),
   gender: Yup.string().required('Gender is required'),
   role: Yup.string().required('Role is required'),
@@ -93,16 +93,29 @@ const validationSchema = Yup.object({
 
 export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: UserFormModalProps) {
   const [imageModalOpen, setImageModalOpen] = useState(false)
+  const [imageChanged, setImageChanged] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const isEdit = Boolean(user)
 
   const formik = useFormik<UserFormValues>({
     initialValues: getValues(user),
     validationSchema,
-    enableReinitialize: true, // re-populates form when user prop changes after fetch
+    enableReinitialize: true,
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        await onSubmit(values)
+        let finalImage = ''
+
+        if (!isEdit) {
+          finalImage = STATIC_IMAGE_URL
+        } else {
+          finalImage = imageChanged ? STATIC_IMAGE_URL : user?.image || ''
+        }
+
+        await onSubmit({
+          ...values,
+          image: finalImage,
+        })
+
         onClose()
       } finally {
         setSubmitting(false)
@@ -117,25 +130,26 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
   useEffect(() => {
     if (!open) {
       formik.resetForm({ values: getValues(null) })
+      setImageChanged(false)
     }
   }, [open])
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
+
     const allowed = ['image/jpeg', 'image/jpg', 'image/png']
     if (!allowed.includes(file.type)) {
       formik.setFieldError('image', 'Only JPG, JPEG, or PNG files are allowed')
       return
     }
+
     const reader = new FileReader()
     reader.onload = (ev) => {
-      // Show local preview via base64, but submit static URL
       formik.setFieldValue('image', ev.target?.result as string)
+      setImageChanged(true)
     }
     reader.readAsDataURL(file)
-    // Stash the static URL to be used on submit
-    formik.setFieldValue('_imageUrl', STATIC_IMAGE_URL)
   }
 
   const handleClose = () => {
@@ -156,6 +170,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.firstName ? formik.errors.firstName : undefined}
               onChange={formik.handleChange('firstName')}
               onBlur={formik.handleBlur('firstName')}
+              placeholder='Enter First name'
             />
             <InputField
               id="lastName" label="Last Name *"
@@ -163,6 +178,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.lastName ? formik.errors.lastName : undefined}
               onChange={formik.handleChange('lastName')}
               onBlur={formik.handleBlur('lastName')}
+              placeholder='Enter Last name'
             />
             <InputField
               id="email" label="Email *"
@@ -170,6 +186,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.email ? formik.errors.email : undefined}
               onChange={formik.handleChange('email')}
               onBlur={formik.handleBlur('email')}
+              placeholder='Enter Email'
             />
             <InputField
               id="phone" label="Phone *"
@@ -177,6 +194,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.phone ? formik.errors.phone : undefined}
               onChange={formik.handleChange('phone')}
               onBlur={formik.handleBlur('phone')}
+              placeholder='Enter Phone'
             />
             <InputField
               id="age" label="Age *" type="number"
@@ -184,6 +202,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.age ? formik.errors.age : undefined}
               onChange={formik.handleChange('age')}
               onBlur={formik.handleBlur('age')}
+              placeholder='Enter Age'
             />
             <SelectField
               id="gender" label="Gender"
@@ -221,7 +240,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
                       </button>
                     </>
                   ) : (
-                    <div className="h-20 w-20 rounded-full bg-slate-200 flex items-center justify-center text-xs">
+                    <div className="h-20 w-20 rounded-full bg-slate-200 flex items-center justify-center text-xs text-black">
                       No img
                     </div>
                   )}
@@ -241,6 +260,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.addressLine ? formik.errors.addressLine : undefined}
               onChange={formik.handleChange('addressLine')}
               onBlur={formik.handleBlur('addressLine')}
+              placeholder='Enter Address'
             />
             <InputField
               id="city" label="City *"
@@ -248,6 +268,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.city ? formik.errors.city : undefined}
               onChange={formik.handleChange('city')}
               onBlur={formik.handleBlur('city')}
+              placeholder='Enter City'
             />
             <InputField
               id="state" label="State *"
@@ -255,6 +276,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.state ? formik.errors.state : undefined}
               onChange={formik.handleChange('state')}
               onBlur={formik.handleBlur('state')}
+              placeholder='Enter State'
             />
             <InputField
               id="country" label="Country *"
@@ -262,6 +284,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.country ? formik.errors.country : undefined}
               onChange={formik.handleChange('country')}
               onBlur={formik.handleBlur('country')}
+              placeholder='Enter Country'
             />
             <InputField
               id="companyName" label="Company Name *"
@@ -269,6 +292,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.companyName ? formik.errors.companyName : undefined}
               onChange={formik.handleChange('companyName')}
               onBlur={formik.handleBlur('companyName')}
+              placeholder='Enter Company name'
             />
             <InputField
               id="department" label="Department *"
@@ -276,6 +300,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.department ? formik.errors.department : undefined}
               onChange={formik.handleChange('department')}
               onBlur={formik.handleBlur('department')}
+              placeholder='Enter Department'
             />
             <InputField
               id="title" label="Title *"
@@ -283,6 +308,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
               error={formik.touched.title ? formik.errors.title : undefined}
               onChange={formik.handleChange('title')}
               onBlur={formik.handleBlur('title')}
+              placeholder='Enter Title'
             />
 
             <div className="col-span-full mt-2 flex justify-end gap-2">

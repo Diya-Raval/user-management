@@ -9,6 +9,8 @@ import { createUserColumns } from '../components/users/userTableColumns'
 import { addUser, deleteUser, getUserById, getUsers, updateUser } from '../api/usersApi'
 import type { User } from '../types/user'
 import { Button } from '../components/common/Button'
+import { showSuccessToast } from '../utils/toast';
+import { MESSAGES } from '../constants/message';
 
 type SortBy = 'name-asc' | 'name-desc' | 'age-asc' | 'age-desc'
 
@@ -43,7 +45,7 @@ export function UserListPage() {
 
   const [debouncedSearch] = useDebounce(search, 500)
 
-const [filtersApplied, setFiltersApplied] = useState(false)
+  const [filtersApplied, setFiltersApplied] = useState(false)
 
   const [deleteTarget, setDeleteTarget] = useState<User | null>(null)
 
@@ -53,7 +55,7 @@ const [filtersApplied, setFiltersApplied] = useState(false)
     setLoading(true)
     try {
       const { sortBy: sortField, order } = parseSortBy(sortBy)
-      const result = await getUsers({ page, limit: rowsPerPage, search:debouncedSearch, role, gender, sortBy: sortField, order, filtersApplied })
+      const result = await getUsers({ page, limit: rowsPerPage, search: debouncedSearch, role, gender, sortBy: sortField, order, filtersApplied })
       setUsers(result.users)
       setTotal(result.total)
     } finally {
@@ -116,6 +118,7 @@ const [filtersApplied, setFiltersApplied] = useState(false)
     setLoading(true)
     try {
       await deleteUser(deleteTarget.id)
+      showSuccessToast(MESSAGES.TOASTS.USER_DELETED)
       fetchUsers()
     } finally {
       setLoading(false)
@@ -125,8 +128,10 @@ const [filtersApplied, setFiltersApplied] = useState(false)
   const handleSubmit = async (values: any) => {
     if (editingUser) {
       await updateUser(editingUser.id, values)
+      showSuccessToast(MESSAGES.TOASTS.USER_UPDATED)
     } else {
       await addUser(values)
+      showSuccessToast(MESSAGES.TOASTS.USER_CREATED)
     }
     fetchUsers()
   }
@@ -163,6 +168,7 @@ const [filtersApplied, setFiltersApplied] = useState(false)
         currentPage={page}
         rowsPerPage={rowsPerPage}
         onPageChange={setPage}
+        rowPerPageOptions={[10, 20, 50, 100]}
         onRowsPerPageChange={(size) => { setRowsPerPage(size); setPage(1) }}
         onFilterOpen={handleFilterOpen}
         onFilterApply={handleFilterApply}
@@ -191,6 +197,7 @@ const [filtersApplied, setFiltersApplied] = useState(false)
       <DeleteConfirmModal
         open={Boolean(deleteTarget)}
         user={deleteTarget}
+        loading={loading}
         onClose={() => setDeleteTarget(null)}
         onConfirm={handleDeleteConfirm}
       />

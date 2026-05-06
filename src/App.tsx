@@ -6,10 +6,19 @@ import { UserDetailsPage } from './pages/UserDetailsPage'
 import { UserListPage } from './pages/UserListPage'
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('theme')
+    return savedTheme === 'dark'
+  })
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode)
+    if (darkMode) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    }
   }, [darkMode])
 
   return (
