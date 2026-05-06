@@ -194,7 +194,7 @@ export function CommonTable<T>({
         content={filterContent}
         onClose={() => setFilterOpen(false)}
         onReset={() => {
-          onFilterReset();
+          onFilterReset?.();
           setFilterOpen(false)
         }}
         onApply={() => {

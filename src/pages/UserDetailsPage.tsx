@@ -56,8 +56,6 @@ export function UserDetailsPage() {
   }, [id])
 
 
-  const fullName = user ? `${user.firstName} ${user.lastName}` : ''
-
   return (
     <main className="mx-auto max-w-5xl px-4 pb-16 pt-20">
 
@@ -84,12 +82,12 @@ export function UserDetailsPage() {
             <div className="flex flex-col items-center gap-5 sm:flex-row sm:items-start">
               <img
                 src={user.image}
-                alt={fullName}
+                alt="No Image Avaialble"
                 className="h-24 w-24 shrink-0 rounded-2xl object-cover ring-4 ring-slate-100 dark:ring-slate-800"
               />
               <div className="flex flex-1 flex-col gap-3 text-center sm:text-left">
                 <div>
-                  <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{fullName}</h1>
+                  <h1 className="text-2xl font-bold text-slate-900 dark:text-white">{user.firstName + " " + user.lastName}</h1>
                   <p className="mt-0.5 text-sm text-slate-500 dark:text-slate-400">
                     {user.company?.title || 'No title'} · {user.company?.name || 'No company'}
                   </p>

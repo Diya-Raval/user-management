@@ -7,7 +7,7 @@ import { UserFormModal } from '../components/users/UserFormModal'
 import { UserTableFilters } from '../components/users/UserTableFilters'
 import { createUserColumns } from '../components/users/userTableColumns'
 import { addUser, deleteUser, getUserById, getUsers, updateUser } from '../api/usersApi'
-import type { User } from '../types/user'
+import type { User, UserFormValues } from '../types/user'
 import { Button } from '../components/common/Button'
 import { showSuccessToast } from '../utils/toast';
 import { MESSAGES } from '../constants/message';
@@ -104,7 +104,11 @@ export function UserListPage() {
     try {
       const data = await getUserById(String(user.id))
       setEditingUser(data)
-    } finally {
+    }
+    catch(e){
+      console.error(e);
+    } 
+    finally {
       setLoadingUser(false)
     }
   }
@@ -119,13 +123,21 @@ export function UserListPage() {
     try {
       await deleteUser(deleteTarget.id)
       showSuccessToast(MESSAGES.TOASTS.USER_DELETED)
-      fetchUsers()
+      // setPage(1)
+      // fetchUsers()
+      if (page === 1) {
+        fetchUsers()
+      } else {
+        setPage(1)
+      }
+    } catch(e){
+      console.error(e);
     } finally {
       setLoading(false)
     }
   }
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: UserFormValues) => {
     if (editingUser) {
       await updateUser(editingUser.id, values)
       showSuccessToast(MESSAGES.TOASTS.USER_UPDATED)

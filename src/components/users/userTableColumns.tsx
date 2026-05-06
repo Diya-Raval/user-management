@@ -33,21 +33,22 @@ export function createUserColumns({ onView, onEdit, onDelete }: CreateUserColumn
         <div className="flex gap-2">
           <button
             onClick={() => onView(user)}
-            className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800"
+            className="rounded p-1 text-slate-400  hover:text-slate-500 cursor-pointer"
             title="View Details"
           >
             <Eye size={18} />
           </button>
           <button
             onClick={() => onEdit(user)}
-            className="rounded p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600 dark:hover:bg-slate-800"
+            className="rounded p-1 text-slate-400  hover:text-slate-500 cursor-pointer"
             title="Edit User"
           >
             <PencilSimple size={18} />
           </button>
           <button
             onClick={() => onDelete(user)}
-            className="rounded p-1 text-red-400 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20"
+            className="rounded p-1 text-red-400  hover:text-red-600 
+            cursor-pointer"
             title="Delete User"
           >
             <Trash size={18} />
