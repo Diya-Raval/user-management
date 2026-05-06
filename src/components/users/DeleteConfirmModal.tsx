@@ -18,7 +18,7 @@ export function DeleteConfirmModal({
   loading,
 }: DeleteConfirmModalProps) {
   return (
-    <Modal open={open} title="Confirm Delete" onClose={onClose}>
+    <Modal open={open} title="Confirm Delete" onClose={onClose} size='sm'>
       <p className="text-sm text-slate-600 dark:text-slate-300">
         Are you sure you want to delete{' '}
         <strong>{user ? `${user.firstName} ${user.lastName}` : 'this user'}</strong>?

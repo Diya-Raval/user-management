@@ -6,6 +6,13 @@ interface ModalProps {
   title: string
   open: boolean
   onClose: () => void
+  size?: 'sm' | 'md' | 'lg'
+}
+
+const sizeClasses = {
+  sm: 'max-w-md',
+  md: 'max-w-2xl',
+  lg: 'max-w-4xl',
 }
 
 export function Modal({
@@ -13,6 +20,7 @@ export function Modal({
   open,
   onClose,
   children,
+  size,
 }: PropsWithChildren<ModalProps>) {
   if (!open) return null
 
@@ -23,7 +31,9 @@ export function Modal({
       onClick={onClose}
     >
       <section
-        className="max-h-[90vh] w-full max-w-4xl overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900"
+        className={`max-h-[90vh] w-full overflow-y-auto rounded-xl border border-slate-200 bg-white p-4 shadow-xl dark:border-slate-700 dark:bg-slate-900 ${
+          sizeClasses[size ?? 'lg']
+        }`}
         role="dialog"
         aria-modal="true"
         aria-label={title}
