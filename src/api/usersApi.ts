@@ -87,13 +87,11 @@ function toSkip(page: number, limit: number) {
   return (page - 1) * limit
 }
 
-// Fetch ALL pages for a given filter so we can cross-filter client-side
 async function fetchAllByFilter(
   key: 'gender' | 'role',
   value: string,
   baseParams: Record<string, string | number>,
 ): Promise<RawUser[]> {
-  // First request to know the total
   const first = await httpClient.get<UsersApiResponse>('/users/filter', {
     params: { ...baseParams, limit: 0, skip: 0, key, value },
   })
@@ -113,7 +111,7 @@ export async function getUsers(query: UsersQuery): Promise<UsersResponse> {
   const hasRole = query.role !== 'all'
   const isDefaultSort = query.sortBy === 'name' && query.order === 'asc'
   const isCleanState = isDefaultSort && !hasGender && !hasRole && !search && !query.filtersApplied
-  
+
   const baseParams: Record<string, string | number> = {
     limit: query.limit,
     skip,
@@ -147,7 +145,6 @@ export async function getUsers(query: UsersQuery): Promise<UsersResponse> {
     return toUsersResponse(response.data)
   }
 
-  // Combined filters — fetch primary filter in full, apply rest client-side
   if (hasGender || hasRole || search) {
     let allUsers: RawUser[]
 

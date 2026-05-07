@@ -1,4 +1,3 @@
-// components/common/ImageModal.tsx
 import { Modal } from './Modal'
 
 interface ImageModalProps {

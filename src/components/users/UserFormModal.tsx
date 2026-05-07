@@ -8,7 +8,7 @@ import { Modal } from '../common/Modal'
 import { SelectField } from '../common/SelectField'
 import { ImageModal } from '../common/ImageModal'
 import { Eye } from '@phosphor-icons/react'
-import { Loader } from '../common/Loader'
+import { FormSkeleton } from '../common/FormSkeleton'
 
 interface UserFormModalProps {
   open: boolean
@@ -161,7 +161,7 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
     <>
       <Modal open={open} title={isEdit ? 'Edit User' : 'Add User'} onClose={handleClose}>
         {loadingUser ? (
-          <Loader />
+          <FormSkeleton />
         ) : (
           <form className="grid grid-cols-1 gap-3 md:grid-cols-2" onSubmit={formik.handleSubmit}>
             <InputField
