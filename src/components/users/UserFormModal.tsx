@@ -237,7 +237,6 @@ export function UserFormModal({ open, user, loadingUser, onClose, onSubmit }: Us
                         className="h-20 w-20 rounded-full object-cover border border-slate-200"
                       />
 
-                      {/* Eye Icon */}
                       <button
                         type="button"
                         onClick={() => setImageModalOpen(true)}
