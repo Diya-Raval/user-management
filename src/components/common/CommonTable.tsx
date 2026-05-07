@@ -90,7 +90,6 @@ export function CommonTable<T>({
               placeholder={searchPlaceholder || 'Search'}
               className="w-full bg-transparent text-sm outline-none"
             />
-            {/* NEW: clear button */}
             {searchValue ? (
               <Button
                 variant="secondary"
@@ -114,7 +113,6 @@ export function CommonTable<T>({
             aria-label="Open filters"
           >
             <FunnelSimple size={20} />
-            {/* NEW: active filter dot */}
             {hasActiveFilters ? (
               <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-blue-500" />
             ) : null}
