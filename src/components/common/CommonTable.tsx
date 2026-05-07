@@ -3,7 +3,7 @@ import { useMemo, useState, type ReactNode } from 'react'
 import { TableFilterModal } from './TableFilterModal'
 import { TablePaginationBar } from './TablePaginationBar'
 import { Button } from './Button'
-import { Loader } from './Loader'
+import { TableSkeleton } from './TableSkeleton'
 
 interface Column<T> {
   key: string
@@ -135,14 +135,7 @@ export function CommonTable<T>({
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td
-                  colSpan={columns.length}
-                  className="px-3 py-8 text-center text-sm text-slate-500"
-                >
-                  <Loader />
-                </td>
-              </tr>
+              <TableSkeleton columns={columns.length} />
             ) : rowData.length === 0 ? (
               <tr>
                 <td

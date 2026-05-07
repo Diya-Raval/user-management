@@ -10,9 +10,9 @@ import {
 } from '@phosphor-icons/react'
 import { getUserById } from '../api/usersApi'
 import { ErrorState } from '../components/common/ErrorState'
-import { Loader } from '../components/common/Loader'
 import { Card } from '../components/common/Card'
 import type { User } from '../types/user'
+import { UserDetailsSkeleton } from '../components/common/UserDetailsSkeleton'
 
 function Field({ label, value }: { label: string; value?: string | number | null }) {
   return (
@@ -69,7 +69,7 @@ export function UserDetailsPage() {
 
       {loading && (
         <div className="flex h-[60vh] items-center justify-center">
-          <Loader />
+          <UserDetailsSkeleton />
         </div>
       )}
 
